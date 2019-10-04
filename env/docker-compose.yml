@@ -1,0 +1,60 @@
+version: '3'
+
+services:
+    nginx:
+        image: nginx:stable
+        ports:
+            - "80:80"
+        volumes:
+            - ../:/var/www/html/${DOMAIN}
+            - ./server-config/nginx:/etc/nginx/conf.d/
+            - ./data/logs/nginx/:/var/log/nginx
+        links:
+            - php
+        networks:
+            net:
+                # делаем домены приложения доступными для других сервисов
+                aliases:
+                    - ${DOMAIN}
+    php:
+        build: docker/images/php-fpm-7.3
+        user: "dev"
+        expose:
+            - "9000"
+        volumes:
+            - ./data/composer:/home/dev/composer
+            - ../:/var/www/html/${DOMAIN}
+            - ./server-config/php/dev.ini:/usr/local/etc/php/php.ini
+        links:
+            - postgres
+            - redis
+        environment:
+            - DOMAIN=${DOMAIN}
+        networks:
+            - net
+    postgres:
+        image: postgres:11
+        ports:
+            - "5432:5432"
+        expose:
+            - "5432"
+        environment:
+            - POSTGRES_USER=${COMPOSE_PROJECT_NAME}
+            - POSTGRES_PASSWORD=123
+        volumes:
+            - ./data/logs/pgsql/:/var/log/pgsql
+            - pgsql-data:/var/lib/pgsql
+        networks:
+            - net
+    redis:
+        image: redis:latest
+        ports:
+            - "6379:6379"
+        networks:
+            - net
+volumes:
+    pgsql-data:
+
+networks:
+    net:
+        driver: bridge
