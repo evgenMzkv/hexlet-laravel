@@ -38,3 +38,5 @@ Route::patch('/articles/{id}', 'ArticleController@update')
 
 Route::delete('/articles/{id}', 'ArticleController@delete')
     ->name('articles.delete');
+
+Route::resource('/items', 'ItemController');
