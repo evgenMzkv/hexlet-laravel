@@ -63,4 +63,11 @@ class ArticleController extends Controller
             ->route('articles.index')
             ->with('updated', 'Updated');
     }
+
+    public function delete($id)
+    {
+        $article = Article::findOrFail($id);
+        $article->delete();
+        return redirect()->route('articles.index');
+    }
 }

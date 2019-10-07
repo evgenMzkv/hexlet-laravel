@@ -28,7 +28,11 @@
                     <td>{{$article->id}}</td>
                     <td>
                         <a href="{{route('articles.show', ['id' => $article->id])}}">{{$article->name}}</a>&nbsp;|&nbsp;
-                        <a href="{{route('articles.edit', ['id' => $article->id])}}">edit</a>
+                        <a href="{{route('articles.edit', ['id' => $article->id])}}">edit</a>&nbsp;|&nbsp;
+                        <a href="{{route('articles.delete', ['id' => $article->id])}}"
+                           data-confirm="Are you sure?"
+                           rel="nofollow"
+                           data-method="delete">del</a>
                     </td>
                 </tr>
             @endforeach

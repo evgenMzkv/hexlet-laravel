@@ -35,3 +35,6 @@ Route::post('/articles', 'ArticleController@store')
 
 Route::patch('/articles/{id}', 'ArticleController@update')
     ->name('articles.update');
+
+Route::delete('/articles/{id}', 'ArticleController@delete')
+    ->name('articles.delete');
