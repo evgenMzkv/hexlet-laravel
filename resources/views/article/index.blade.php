@@ -6,6 +6,12 @@
     </div>
 @endif
 
+@if(Session::has('updated'))
+    <div>
+        <p>{{ Session::get('updated') }}</p>
+    </div>
+@endif
+
 @section('content')
     <h1>Список статей</h1>
     <div>
@@ -20,7 +26,10 @@
             @foreach($articles as $article)
                 <tr>
                     <td>{{$article->id}}</td>
-                    <td><a href="{{route('articles.show', ['id' => $article->id])}}">{{$article->name}}</a></td>
+                    <td>
+                        <a href="{{route('articles.show', ['id' => $article->id])}}">{{$article->name}}</a>&nbsp;|&nbsp;
+                        <a href="{{route('articles.edit', ['id' => $article->id])}}">edit</a>
+                    </td>
                 </tr>
             @endforeach
             </tbody>

@@ -40,4 +40,27 @@ class ArticleController extends Controller
             ->route('articles.index')
             ->with('created', 'Article successfully created.');
     }
+
+    public function edit($id)
+    {
+        $article = Article::findOrFail($id);
+        return view('article.edit', compact('article'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $article = Article::findOrFail($id);
+        $this->validate($request, [
+            // У обновления немного измененная валидация. В проверку уникальности добавляется название поля и id текущего объекта
+            // Если этого не сделать, Laravel будет ругаться на то что имя уже существует
+            'name' => 'required|unique:articles,name,' . $article->id,
+            'body' => 'required|min:10',
+        ]);
+
+        $article->fill($request->all());
+        $article->save();
+        return redirect()
+            ->route('articles.index')
+            ->with('updated', 'Updated');
+    }
 }
